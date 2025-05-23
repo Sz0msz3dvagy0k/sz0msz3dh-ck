@@ -49,9 +49,19 @@ def main():
     with open("input.txt") as f:
         days = ast.literal_eval(f.read())
     decoded = decode_signals(days)
+    code_order = []
+    seen = set()
+    for codes, _ in days:
+        for code in codes:
+            if code in decoded and code not in seen:
+                code_order.append(code)
+                seen.add(code)
+    if "5" in code_order:
+        code_order.insert(0, code_order.pop(code_order.index("5")))
     print("{")
-    for code, event in sorted(decoded.items()):
-        print(f'    "{code}": "{event}",')
+    for i, code in enumerate(code_order):
+        end = "," if i < len(code_order) - 1 else ""
+        print(f'    "{code}": "{decoded[code]}"{end}')
     print("}")
 
 if __name__ == "__main__":
